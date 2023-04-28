@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class CustomTools {
-    // create a JLabel with an image
     public static JLabel loadImage(String resource){
         BufferedImage image;
         try{
@@ -32,15 +31,12 @@ public class CustomTools {
     }
 
     public static Font createFont(String resource){
-        // get font file path
         String filePath = CustomTools.class.getClassLoader().getResource(resource).getPath();
 
-        // check for empty spaces in path (bug)
         if(filePath.contains("%20")){
             filePath = filePath.replaceAll("%20", " ");
         }
 
-        // create font
         try{
             File customFontFile = new File(filePath);
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, customFontFile);

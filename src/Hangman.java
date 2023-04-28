@@ -64,7 +64,6 @@ public class Hangman extends JFrame implements ActionListener {
                 hiddenWordLabel.getPreferredSize().height
         );
 
-        // letter buttons
         GridLayout gridLayout = new GridLayout(4, 7);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBounds(
@@ -75,7 +74,6 @@ public class Hangman extends JFrame implements ActionListener {
         );
         buttonPanel.setLayout(gridLayout);
 
-        // create the letter buttons
         for(char c = 'A'; c <= 'Z'; c++){
             JButton button = new JButton(Character.toString(c));
             button.setBackground(CommonConstants.PRIMARY_COLOR);
@@ -83,14 +81,12 @@ public class Hangman extends JFrame implements ActionListener {
             button.setForeground(Color.WHITE);
             button.addActionListener(this);
 
-            // using ASCII values to caluclate the current index
             int currentIndex = c - 'A';
 
             letterButtons[currentIndex] = button;
             buttonPanel.add(letterButtons[currentIndex]);
         }
 
-        // reset button
         JButton resetButton = new JButton("Reset");
         resetButton.setFont(customFont.deriveFont(22f));
         resetButton.setForeground(Color.WHITE);
@@ -98,7 +94,6 @@ public class Hangman extends JFrame implements ActionListener {
         resetButton.addActionListener(this);
         buttonPanel.add(resetButton);
 
-        // quit button
         JButton quitButton = new JButton("Quit");
         quitButton.setFont(customFont.deriveFont(22f));
         quitButton.setForeground(Color.WHITE);
@@ -112,7 +107,6 @@ public class Hangman extends JFrame implements ActionListener {
         getContentPane().add(buttonPanel);
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if(command.equals("Reset") || command.equals("Restart")){
@@ -125,50 +119,35 @@ public class Hangman extends JFrame implements ActionListener {
             dispose();
             return;
         }else{
-            // letter buttons
-
-            // disable button
             JButton button = (JButton) e.getSource();
             button.setEnabled(false);
 
-            // check if the word contains the user's guess,
             if(wordChallenge[1].contains(command)){
-                // indicate that the user got it right
                 button.setBackground(Color.GREEN);
 
-                // store the hidden word in a char array, so update the hidden text
                 char[] hiddenWord = hiddenWordLabel.getText().toCharArray();
 
                 for(int i = 0; i < wordChallenge[1].length(); i++){
-                    // update _ to correct letter
                     if(wordChallenge[1].charAt(i) == command.charAt(0)){
                         hiddenWord[i] = command.charAt(0);
                     }
                 }
 
-                // update hiddenWordLabel
                 hiddenWordLabel.setText(String.valueOf(hiddenWord));
 
-                // the user guessed the word right
                 if(!hiddenWordLabel.getText().contains("*")){
-                    // display dialog with success result
                     resultLabel.setText("You got it right!");
                     resultDialog.setVisible(true);
                 }
 
             }else{
-                // indicate that the user chose the wrong letter
                 button.setBackground(Color.RED);
 
-                // increase incorrect counter
                 ++incorrectGuesses;
 
-                // update hangman image
                 CustomTools.updateImage(hangmanImage, "resources/" + (incorrectGuesses + 1) + ".png");
 
-                // user failed to guess word right
                 if(incorrectGuesses >= 6){
-                    // display result dialog with game over label
                     resultLabel.setText("Too Bad, Try Again?");
                     resultDialog.setVisible(true);
                 }
@@ -213,21 +192,16 @@ public class Hangman extends JFrame implements ActionListener {
     }
 
     private void resetGame(){
-        // load new challenge
         wordChallenge = wordDB.loadChallenge();
         incorrectGuesses = 0;
 
-        // load starting image
         CustomTools.updateImage(hangmanImage, CommonConstants.IMAGE_PATH);
 
-        // update category
         categoryLabel.setText(wordChallenge[0]);
 
-        // update hiddenWord
         String hiddenWord = CustomTools.hideWords(wordChallenge[1]);
         hiddenWordLabel.setText(hiddenWord);
 
-        // enable all buttons again
         for(int i = 0; i < letterButtons.length; i++){
             letterButtons[i].setEnabled(true);
             letterButtons[i].setBackground(CommonConstants.PRIMARY_COLOR);
